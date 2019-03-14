@@ -1,0 +1,1047 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "vpc050e7fae065b21f0c": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/16",
+        "InstanceTenancy": "default",
+        "EnableDnsSupport": "true",
+        "EnableDnsHostnames": "false",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "InnoMed"
+          }
+        ]
+      }
+    },
+    "subnet07c12749ee1d85982": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.21.0/24",
+        "AvailabilityZone": "us-west-1c",
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "app2"
+          }
+        ]
+      }
+    },
+    "subnet05260676f78cb439b": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.11.0/24",
+        "AvailabilityZone": "us-west-1c",
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "web2"
+          }
+        ]
+      }
+    },
+    "subnet0da8ca8f941d089f8": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.10.0/24",
+        "AvailabilityZone": "us-west-1a",
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "web1"
+          }
+        ]
+      }
+    },
+    "subnet0e29dc8e8955de7e7": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.31.0/24",
+        "AvailabilityZone": "us-west-1c",
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "db2"
+          }
+        ]
+      }
+    },
+    "subnet0b39913a1bc8b69b3": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.20.0/24",
+        "AvailabilityZone": "us-west-1a",
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "app1"
+          }
+        ]
+      }
+    },
+    "subnet0cbf7c4a5a0e84bef": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/27",
+        "AvailabilityZone": "us-west-1a",
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "public1"
+          }
+        ]
+      }
+    },
+    "subnet0af398b7307fb7e81": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.1.0/27",
+        "AvailabilityZone": "us-west-1c",
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "public2"
+          }
+        ]
+      }
+    },
+    "subnet0d91e27996e8e0ded": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.30.0/24",
+        "AvailabilityZone": "us-west-1a",
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "db1"
+          }
+        ]
+      }
+    },
+    "igw09682831753e21c4b": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "InnoMedGateway"
+          }
+        ]
+      }
+    },
+    "dopt6dcce90a": {
+      "Type": "AWS::EC2::DHCPOptions",
+      "Properties": {
+        "DomainName": "us-west-1.compute.internal",
+        "DomainNameServers": [
+          "AmazonProvidedDNS"
+        ]
+      }
+    },
+    "acl07f5b8e77c1491ad3": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        }
+      }
+    },
+    "rtb00646285309b58510": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "InnoMedRouteTable"
+          }
+        ]
+      }
+    },
+    "asgAppTier": {
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "Properties": {
+        "AvailabilityZones": [
+          "us-west-1a",
+          "us-west-1c"
+        ],
+        "Cooldown": "300",
+        "DesiredCapacity": "4",
+        "HealthCheckGracePeriod": "300",
+        "HealthCheckType": "EC2",
+        "MaxSize": "4",
+        "MinSize": "4",
+        "VPCZoneIdentifier": [
+          {
+            "Ref": "subnet07c12749ee1d85982"
+          },
+          {
+            "Ref": "subnet0b39913a1bc8b69b3"
+          }
+        ],
+        "LaunchConfigurationName": {
+          "Ref": "lcAppTier"
+        },
+        "Tags": [
+          {
+            "Key": "name",
+            "Value": "AppTier",
+            "PropagateAtLaunch": true
+          }
+        ],
+        "TerminationPolicies": [
+          "Default"
+        ]
+      }
+    },
+    "asgWebTier": {
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "Properties": {
+        "AvailabilityZones": [
+          "us-west-1a",
+          "us-west-1c"
+        ],
+        "Cooldown": "300",
+        "DesiredCapacity": "4",
+        "HealthCheckGracePeriod": "300",
+        "HealthCheckType": "EC2",
+        "MaxSize": "4",
+        "MinSize": "4",
+        "VPCZoneIdentifier": [
+          {
+            "Ref": "subnet05260676f78cb439b"
+          },
+          {
+            "Ref": "subnet0da8ca8f941d089f8"
+          }
+        ],
+        "LaunchConfigurationName": {
+          "Ref": "lcWebTier"
+        },
+        "Tags": [
+          {
+            "Key": "name",
+            "Value": "webTier",
+            "PropagateAtLaunch": true
+          }
+        ],
+        "TerminationPolicies": [
+          "Default"
+        ]
+      }
+    },
+    "lcAppTier": {
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
+      "Properties": {
+        "ImageId": "ami-0f825806081c4725c",
+        "InstanceType": "m4.xlarge",
+        "KeyName": "qwikLABS-L120-152353",
+        "SecurityGroups": [
+          {
+            "Ref": "sgappSG"
+          }
+        ],
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "SnapshotId": "snap-05bae849a300e8920",
+              "VolumeSize": 30
+            }
+          }
+        ]
+      }
+    },
+    "lcWebTier": {
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
+      "Properties": {
+        "ImageId": "ami-0f825806081c4725c",
+        "InstanceType": "t2.medium",
+        "KeyName": "qwikLABS-L120-152353",
+        "IamInstanceProfile": "ec2-s3",
+        "SecurityGroups": [
+          {
+            "Ref": "sgwebSG"
+          }
+        ],
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "SnapshotId": "snap-05bae849a300e8920",
+              "VolumeSize": 30
+            }
+          }
+        ]
+      }
+    },
+    "instancei00040aef1a1bc6e15": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "EbsOptimized": "true",
+        "ImageId": "ami-0f825806081c4725c",
+        "InstanceType": "m4.xlarge",
+        "KeyName": "qwikLABS-L120-152353",
+        "Monitoring": "false",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "app"
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "Description": "Primary network interface",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "subnet0b39913a1bc8b69b3"
+            },
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "10.0.20.77",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "sgappSG"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "instancei0af8be82a6a3fbf99": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "EbsOptimized": "true",
+        "ImageId": "ami-0f825806081c4725c",
+        "InstanceType": "m4.xlarge",
+        "KeyName": "qwikLABS-L120-152353",
+        "Monitoring": "false",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "app"
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "Description": "Primary network interface",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "subnet0b39913a1bc8b69b3"
+            },
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "10.0.20.80",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "sgappSG"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "instancei0699d7dd9b66cb79a": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "IamInstanceProfile": "arn:aws:iam::478026173163:instance-profile/ec2-s3",
+        "ImageId": "ami-0f825806081c4725c",
+        "InstanceType": "t2.medium",
+        "KeyName": "qwikLABS-L120-152353",
+        "Monitoring": "false",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Web-Tier"
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "Description": "Primary network interface",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "subnet0da8ca8f941d089f8"
+            },
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "10.0.10.14",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "sgwebSG"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "instancei0375de4c5b169de94": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "IamInstanceProfile": "arn:aws:iam::478026173163:instance-profile/ec2-s3",
+        "ImageId": "ami-0f825806081c4725c",
+        "InstanceType": "t2.medium",
+        "KeyName": "qwikLABS-L120-152353",
+        "Monitoring": "false",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Web-Tier"
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "Description": "Primary network interface",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "subnet0da8ca8f941d089f8"
+            },
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "10.0.10.229",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "sgwebSG"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "rdsinnomeddb": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "AllocatedStorage": "20",
+        "AllowMajorVersionUpgrade": "false",
+        "DBInstanceClass": "db.m4.2xlarge",
+        "Port": "1433",
+        "StorageType": "gp2",
+        "BackupRetentionPeriod": "7",
+        "MasterUsername": "admin",
+        "MasterUserPassword": "MyPassword",
+        "PreferredBackupWindow": "06:29-06:59",
+        "PreferredMaintenanceWindow": "sat:08:29-sat:08:59",
+        "DBName": "MyDatabase",
+        "Engine": "sqlserver-se",
+        "EngineVersion": "13.00.5216.0.v1",
+        "LicenseModel": "license-included",
+        "DBSubnetGroupName": {
+          "Ref": "dbsubnetdefaultvpc050e7fae065b21f0c"
+        },
+        "VPCSecurityGroups": [
+          "sg-0e6c9ee9f9c0a06f4",
+          {
+            "Ref": "sgdbSG"
+          }
+        ]
+      }
+    },
+    "rdsinnomeddb2": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "AllocatedStorage": "20",
+        "AllowMajorVersionUpgrade": "false",
+        "DBInstanceClass": "db.m4.2xlarge",
+        "Port": "1433",
+        "StorageType": "gp2",
+        "BackupRetentionPeriod": "7",
+        "MasterUsername": "admin",
+        "MasterUserPassword": "MyPassword",
+        "PreferredBackupWindow": "12:50-13:20",
+        "PreferredMaintenanceWindow": "sun:08:09-sun:08:39",
+        "DBName": "MyDatabase",
+        "Engine": "sqlserver-se",
+        "EngineVersion": "13.00.5216.0.v1",
+        "LicenseModel": "license-included",
+        "DBSubnetGroupName": {
+          "Ref": "dbsubnetdefaultvpc050e7fae065b21f0c"
+        },
+        "VPCSecurityGroups": [
+          "sg-0588dddd85a504452"
+        ]
+      }
+    },
+    "s3innomedbucket1": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "AccessControl": "Private",
+        "VersioningConfiguration": {
+          "Status": "Suspended"
+        }
+      }
+    },
+    "dbsubnetdefaultvpc050e7fae065b21f0c": {
+      "Type": "AWS::RDS::DBSubnetGroup",
+      "Properties": {
+        "DBSubnetGroupDescription": "Created from the RDS Management Console",
+        "SubnetIds": [
+          {
+            "Ref": "subnet05260676f78cb439b"
+          },
+          {
+            "Ref": "subnet0da8ca8f941d089f8"
+          },
+          {
+            "Ref": "subnet0e29dc8e8955de7e7"
+          },
+          {
+            "Ref": "subnet0b39913a1bc8b69b3"
+          },
+          {
+            "Ref": "subnet0cbf7c4a5a0e84bef"
+          },
+          {
+            "Ref": "subnet0af398b7307fb7e81"
+          },
+          {
+            "Ref": "subnet0d91e27996e8e0ded"
+          },
+          {
+            "Ref": "subnet07c12749ee1d85982"
+          }
+        ]
+      }
+    },
+    "sgappELBsg": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "app elb sg",
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        }
+      }
+    },
+    "sgdbSG": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "db",
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        }
+      }
+    },
+    "sgwebSG": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "web security group",
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        }
+      }
+    },
+    "sgwebELBsg": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "web elb sg",
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        }
+      }
+    },
+    "sgappSG": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "app sg",
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        }
+      }
+    },
+    "sgInnoMedWebServerSecurityGroup1T1ET0VRS8DKL": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Enable HTTPS access via port 443",
+        "VpcId": "vpc-0058d4fc8abb4fa82"
+      }
+    },
+    "dbsgdefault": {
+      "Type": "AWS::RDS::DBSecurityGroup",
+      "Properties": {
+        "GroupDescription": "default"
+      }
+    },
+    "s3policyinnomedbucket1": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "s3innomedbucket1"
+        },
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "AWSCloudTrailAclCheck20150319",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "cloudtrail.amazonaws.com"
+              },
+              "Action": "s3:GetBucketAcl",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:s3:::",
+                    "innomedbucket",
+                    "1"
+                  ]
+                ]
+              }
+            },
+            {
+              "Sid": "AWSCloudTrailWrite20150319",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "cloudtrail.amazonaws.com"
+              },
+              "Action": "s3:PutObject",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:s3:::",
+                    "innomedbucket",
+                    "1/AWSLogs/478026173163/*"
+                  ]
+                ]
+              },
+              "Condition": {
+                "StringEquals": {
+                  "s3:x-amz-acl": "bucket-owner-full-control"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "trailInnomedTrail": {
+      "Type": "AWS::CloudTrail::Trail",
+      "Properties": {
+        "IncludeGlobalServiceEvents": true,
+        "IsLogging": "true",
+        "S3BucketName": {
+          "Ref": "s3innomedbucket1"
+        }
+      }
+    },
+    "acl1": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Egress": "true",
+        "Protocol": "-1",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "NetworkAclId": {
+          "Ref": "acl07f5b8e77c1491ad3"
+        }
+      }
+    },
+    "acl2": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Protocol": "-1",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "NetworkAclId": {
+          "Ref": "acl07f5b8e77c1491ad3"
+        }
+      }
+    },
+    "subnetacl1": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "acl07f5b8e77c1491ad3"
+        },
+        "SubnetId": {
+          "Ref": "subnet0d91e27996e8e0ded"
+        }
+      }
+    },
+    "subnetacl2": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "acl07f5b8e77c1491ad3"
+        },
+        "SubnetId": {
+          "Ref": "subnet0e29dc8e8955de7e7"
+        }
+      }
+    },
+    "subnetacl3": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "acl07f5b8e77c1491ad3"
+        },
+        "SubnetId": {
+          "Ref": "subnet0b39913a1bc8b69b3"
+        }
+      }
+    },
+    "subnetacl4": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "acl07f5b8e77c1491ad3"
+        },
+        "SubnetId": {
+          "Ref": "subnet05260676f78cb439b"
+        }
+      }
+    },
+    "subnetacl5": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "acl07f5b8e77c1491ad3"
+        },
+        "SubnetId": {
+          "Ref": "subnet07c12749ee1d85982"
+        }
+      }
+    },
+    "subnetacl6": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "acl07f5b8e77c1491ad3"
+        },
+        "SubnetId": {
+          "Ref": "subnet0af398b7307fb7e81"
+        }
+      }
+    },
+    "subnetacl7": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "acl07f5b8e77c1491ad3"
+        },
+        "SubnetId": {
+          "Ref": "subnet0cbf7c4a5a0e84bef"
+        }
+      }
+    },
+    "subnetacl8": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "acl07f5b8e77c1491ad3"
+        },
+        "SubnetId": {
+          "Ref": "subnet0da8ca8f941d089f8"
+        }
+      }
+    },
+    "gw1": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        },
+        "InternetGatewayId": {
+          "Ref": "igw09682831753e21c4b"
+        }
+      }
+    },
+    "subnetroute1": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtb00646285309b58510"
+        },
+        "SubnetId": {
+          "Ref": "subnet07c12749ee1d85982"
+        }
+      }
+    },
+    "subnetroute2": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtb00646285309b58510"
+        },
+        "SubnetId": {
+          "Ref": "subnet0d91e27996e8e0ded"
+        }
+      }
+    },
+    "subnetroute4": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtb00646285309b58510"
+        },
+        "SubnetId": {
+          "Ref": "subnet0e29dc8e8955de7e7"
+        }
+      }
+    },
+    "subnetroute5": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtb00646285309b58510"
+        },
+        "SubnetId": {
+          "Ref": "subnet0da8ca8f941d089f8"
+        }
+      }
+    },
+    "subnetroute6": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtb00646285309b58510"
+        },
+        "SubnetId": {
+          "Ref": "subnet05260676f78cb439b"
+        }
+      }
+    },
+    "subnetroute7": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtb00646285309b58510"
+        },
+        "SubnetId": {
+          "Ref": "subnet0cbf7c4a5a0e84bef"
+        }
+      }
+    },
+    "subnetroute8": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtb00646285309b58510"
+        },
+        "SubnetId": {
+          "Ref": "subnet0af398b7307fb7e81"
+        }
+      }
+    },
+    "subnetroute9": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtb00646285309b58510"
+        },
+        "SubnetId": {
+          "Ref": "subnet0b39913a1bc8b69b3"
+        }
+      }
+    },
+    "dchpassoc1": {
+      "Type": "AWS::EC2::VPCDHCPOptionsAssociation",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc050e7fae065b21f0c"
+        },
+        "DhcpOptionsId": {
+          "Ref": "dopt6dcce90a"
+        }
+      }
+    },
+    "ingress1": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgappELBsg"
+        },
+        "IpProtocol": "udp",
+        "FromPort": "8080",
+        "ToPort": "8080",
+        "SourceSecurityGroupId": {
+          "Ref": "sgwebSG"
+        },
+        "SourceSecurityGroupOwnerId": "478026173163"
+      }
+    },
+    "ingress2": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgdbSG"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "1443",
+        "ToPort": "1443",
+        "SourceSecurityGroupId": {
+          "Ref": "sgappSG"
+        },
+        "SourceSecurityGroupOwnerId": "478026173163"
+      }
+    },
+    "ingress3": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgwebSG"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "80",
+        "ToPort": "80",
+        "SourceSecurityGroupId": {
+          "Ref": "sgwebELBsg"
+        },
+        "SourceSecurityGroupOwnerId": "478026173163"
+      }
+    },
+    "ingress4": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgwebELBsg"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "80",
+        "ToPort": "80",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "ingress5": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgappSG"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "80",
+        "ToPort": "80",
+        "SourceSecurityGroupId": {
+          "Ref": "sgappELBsg"
+        },
+        "SourceSecurityGroupOwnerId": "478026173163"
+      }
+    },
+    "ingress6": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgInnoMedWebServerSecurityGroup1T1ET0VRS8DKL"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "443",
+        "ToPort": "443",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "egress1": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgappELBsg"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "egress2": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgdbSG"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "egress3": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgwebSG"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "egress4": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgwebELBsg"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "egress5": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgappSG"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "egress6": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgInnoMedWebServerSecurityGroup1T1ET0VRS8DKL"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    }
+  },
+  "Description": "InnoMed CA1 Kalum O'Toole"
+}
